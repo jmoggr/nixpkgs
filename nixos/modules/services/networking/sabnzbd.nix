@@ -49,16 +49,18 @@ in
 
   config = mkIf cfg.enable {
 
-    users.users.sabnzbd = {
-          uid = config.ids.uids.sabnzbd;
-          group = "sabnzbd";
-          description = "sabnzbd user";
-          home = "/var/lib/sabnzbd/";
-          createHome = true;
+    users.users = mkIf (cfg.user == "sabnzbd") {
+      sabnzbd = {
+        uid = config.ids.uids.sabnzbd;
+        group = cfg.group;
+        description = "sabnzbd user";
+        home = "/var/lib/sabnzbd/";
+        createHome = true;
+      };
     };
 
-    users.groups.sabnzbd = {
-      gid = config.ids.gids.sabnzbd;
+    users.groups = mkIf (cfg.group == "sabnzbd") {
+      sabnzbd.gid = config.ids.gids.sabnzbd;
     };
 
     systemd.services.sabnzbd = {
